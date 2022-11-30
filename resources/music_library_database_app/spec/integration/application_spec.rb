@@ -10,4 +10,19 @@ describe Application do
   # class so our tests work.
   let(:app) { Application.new }
 
+context "get /get-artists" do
+  it "tests the /get-artists path" do
+  response = get('/get-artists')
+  expect(response.status).to eq 200
+  expect(response.body).to eq "Pixies, ABBA, Taylor Swift, Nina Simone"
+  end
+end
+context "post /artists" do
+  it "adds an artist to the album" do
+    response = post('/artists?name=Wild+nothing&genre=Indie')
+    expect(response.status).to eq 200
+    expect(response.body).to eq 'Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing'
+  end
+end
+
 end

@@ -42,5 +42,6 @@ describe ArtistRepository do
 
     expect(artists.length).to eq(5)
     expect(artists.last.name).to eq('Kiasmos')
+    reset_artists_table
   end
 end
