@@ -10,6 +10,13 @@ describe Application do
   # class so our tests work.
   let(:app) { Application.new }
 
+  context "get /" do
+    it "returns html index" do
+    response = get('/')
+    expect(response.body).to include('<h1>Welcome to my page</h1>')
+end
+end
+
 context "get /get-artists" do
   it "tests the /get-artists path" do
   response = get('/get-artists')
@@ -19,10 +26,71 @@ context "get /get-artists" do
 end
 context "post /artists" do
   it "adds an artist to the album" do
-    response = post('/artists?name=Wild+nothing&genre=Indie')
+    response = post('/artists?name=Wild nothing&genre=Indie')
     expect(response.status).to eq 200
     expect(response.body).to eq 'Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing'
   end
 end
+context "returns name " do
+  it "returns a name" do
+  response = post('/name?name=John')
+  expect(response.body).to include ('John')
+end
+end
+context "get /name" do
+  it "returns a html message with a given name" do
+    response = get('/helloname', name: 'Meep')
+    expect(response.body).to include ("Hello Meep")
+  end
+end
 
+context 'get /albums' do
+  it "lists and returns the albums in html" do
+  response = get('/albums') 
+    expect(response.body).to include ('Waterloo')
+    expect(response.body).to include ('Surfer Rosa')
+    #expect(response.body).to include ('Release year: 1974')
+    #expect(response.body).to include ('Release year: 1988')
+end
+end
+context 'GET /albums/:id' do
+  it "gets album at id 2" do
+    response = get('/albums/2')
+    expect(response.status).to eq 200
+    expect(response.body).to include "Surfer Rosa"
+    expect(response.body).to include "1988"
+  end
+end
+context " get /album -> album/:id" do
+  it "finds a link to album id from the get albums request" do
+    response = get("/albums") 
+    expect(response.status).to eq 200
+    expect(response.body).to include("<a href='/albums/2'>Surfer Rosa</a>")
+    expect(response.body).to include("<a href='/albums/3'>Waterloo</a>")
+    expect(response.body).to include("<a href='/albums/4'>Super Trouper</a>")
+
+end
+end
+
+
+
+
+context "GET /artists/:id" do
+  it "gets information for a single artist" do
+    response = get('/artists/1')
+    expect(response.body).to include('Pixies')
+  end
+  it "gets information for a single artist" do
+    response = get('/artists/2')
+    expect(response.body).to include('ABBA')
+  end
+end
+
+
+context "GET /artists" do
+  it 'returns a html page with lists of artists with links to their artist page' do
+    response = get('/artists')
+    expect(response.body).to include("<a href='/artists/2'>ABBA</a>")
+  end
+end
 end
