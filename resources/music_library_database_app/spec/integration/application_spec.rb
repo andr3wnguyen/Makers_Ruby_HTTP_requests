@@ -93,4 +93,53 @@ context "GET /artists" do
     expect(response.body).to include("<a href='/artists/2'>ABBA</a>")
   end
 end
+
+
+context "GET /albums/new" do
+  it "returns form to add a new album" do
+    response = get('/albums/new')
+    expect(response.status).to eq 200
+    expect(response.body).to include("<form method='POST' action='/albums'>")
+
+  end
+  end
+
+  context "POST /albums" do
+    it "creates a new artist" do
+      response = post('/albums', title:"Meteora", release_year:'2000',artist_id:'1')
+      expect(response.status).to eq 200
+      expect(response.body).to eq ""
+      #check that it has been added to the GET request albums list
+      response2 = get('/albums')
+      expect(response2.body).to include ("Meteora")
+    end
+    it "stops the programming if an error/nil values obtained" do
+      response = post('/albums', title:'invalid', release_year: nil)
+      expect(response.status).to eq 400
+      expect(response.body).to eq ""
+  end
+end
+
+  context "GET /artists/new" do
+    it "returns a form to create a new artist" do
+      response = get("/artists/new")
+      expect(response.status).to eq 200
+      expect(response.body).to include "<form method='POST' action='/artists'>"
+end
+end
+    context "POST /artists" do
+      it "creates a new artist and adds to artist table, returning the artist table" do
+        response = post('/artists', name:"Steve", genre:"Rap")
+        expect(response.status).to eq 200
+        expect(response.body).to include ("Steve")
+      end
+      it "doesn't create a new artist if no values given" do
+        response = post('/artists', name:' ',)
+        expect(response.status).to eq 400
+        expect(response.body).to include ("Please fill out the fields")
+    end
+  end
+
+
+
 end

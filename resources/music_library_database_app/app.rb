@@ -28,6 +28,10 @@ get '/get-artists' do
 end
 
 post '/artists' do
+  if params[:name] == nil || params[:genre] == nil 
+    status 400
+    return "Please fill out the fields"
+  end
   name = params[:name]
   genre = params[:genre]
   repo = ArtistRepository.new
@@ -55,9 +59,29 @@ end
 get '/albums' do
   album_repo = AlbumRepository.new
   @albums = album_repo.all
-
   return erb(:albums)
 end
+
+get '/albums/new' do
+  #gets the album page with forms
+  return erb(:new_album)
+end
+
+post '/albums' do
+  #gets posted album values
+  if params[:title] == nil || params[:release_year] == nil || params[:artist_id] == nil
+    status 400
+    return ""
+  end
+  repo = AlbumRepository.new
+  album = Album.new
+  album.title = params[:title]
+  album.release_year = params[:release_year]
+  album.artist_id = params[:artist_id]
+  repo.create(album)
+  return ""
+end
+
 
 get '/albums/:id' do
   id = params[:id]
@@ -67,6 +91,11 @@ get '/albums/:id' do
   @albumrelease = found.release_year
   return erb(:albumid)
 end
+
+get '/artists/new' do
+return erb(:new_artist)
+end
+
 
 get '/artists/:id' do
   id = params[:id]
@@ -80,4 +109,7 @@ get '/artists' do
   @artists = repo.all
   return erb(:artistsid)
 end
+
+
 end
+
